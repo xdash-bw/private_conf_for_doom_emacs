@@ -21,8 +21,9 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
-;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+(setq doom-font (font-spec :family "Source Code Pro" :size 18 :weight 'semi-light)
+     ;; doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13)
+     )
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -32,7 +33,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-monokai-pro)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -74,3 +75,87 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(use-package! rime
+  :custom
+  (default-input-method "rime")
+  )
+
+(add-to-list 'load-path "/home/jianan-xie/.emacs.d/site-lisp/emacs-application-framework")
+(require 'eaf)
+(require 'eaf-browser)
+
+
+(require 'eaf-video-player)
+(require 'eaf-music-player)
+(require 'eaf-rss-reader)
+
+(require 'eaf-terminal)
+(require 'eaf-system-monitor)
+
+(require 'eaf-pdf-viewer)
+(require 'eaf-markdown-previewer)
+(require 'eaf-org-previewer)
+(require 'eaf-image-viewer)
+
+(require 'eaf-file-manager)
+(require 'eaf-file-browser)
+(require 'eaf-file-sender)
+
+(require 'eaf-mindmap)
+(require 'eaf-jupyter)
+(require 'eaf-camera)
+(require 'eaf-airshare)
+
+(require 'eaf-demo)
+(require 'eaf-vue-demo)
+
+    ;; Browser: Full-featured browser
+    ;; PDF Viewer: The fastest PDF reader
+    ;; Terminal: Full-featured terminal
+    ;; Video Player: Video player base on Qt
+    ;; Markdown Previewer: Markdown file previewer in Emacs
+    ;; Org Previewer: Org file previewer in Emacs
+    ;; Music Player: Music player, support playlist and an audio visualization
+    ;; RSS Reader: RSS reader, rendering html content in expected
+    ;; File Manager: File manager, support file real-time preview
+    ;; Mindmap: Mindmap with full-featured keyboard operation
+    ;; Jupyter: Jupyter in Emacs
+    ;; Image Viewer: Picture viewer, supporting real-time zoom rotation
+    ;; Camera: Use camera in Emacs
+    ;; System Monitor: System monitor base on Vue.js
+    ;; Netease Cloud Music: EAF frontend for NetEase cloud music
+    ;; File Browser: Browse file in mobile phone
+    ;; File Sender: Share file between Emacs and mobile phone
+    ;; Airshare: Share text between Emacs and mobile phone
+    ;; Demo: EAF Application demo base on Qt
+    ;; Vue Demo: EAF Application demo base on Vue.js
+
+
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser)
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)
+  ) ;; unbind, see more in the Wiki
+
+(global-set-key (kbd "M-Y") 'yank)
+
+(defun vsplit-projectile-scratch ()
+  (interactive)
+  (+evil/window-vsplit-and-follow)
+  (doom/switch-to-project-scratch-buffer)
+  )
+
+(map! :leader
+      "hy" #'set-frame-font
+      "w;" #'vsplit-projectile-scratch
+      )

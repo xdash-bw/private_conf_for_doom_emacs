@@ -6,7 +6,7 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-(setq user-full-name "x-dash"
+(setq user-full-name "xdash-bw"
       user-mail-address "xdashproject@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
@@ -256,6 +256,12 @@
 (require 'eaf)
 (require 'eaf-browser)
 (require 'eaf-pdf-viewer)
+(require 'eaf-terminal)
+(require 'eaf-image-viewer)
+(require 'eaf-git)
+(require 'eaf-file-manager)
+(require 'eaf-file-sender)
+
 (use-package! eaf
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom

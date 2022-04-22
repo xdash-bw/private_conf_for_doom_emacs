@@ -114,8 +114,7 @@
 
 
 
-(global-set-key (kbd "C-`") 'doom/open-scratch-buffer)
-(global-set-key (kbd "C-1") (kbd "<C-backspace>"))
+(global-set-key (kbd "C-1") 'doom/open-scratch-buffer)
 (global-set-key (kbd "C-2") 'vsplit-scratch)
 (global-set-key (kbd "C-3") 'persp-add-buffer)
 (global-set-key (kbd "C-4") 'eaf-open-browser-with-history)

@@ -104,13 +104,6 @@
 (global-set-key (kbd "M-N") nil)
 (global-set-key (kbd "M-)") nil)
 
-(global-set-key (kbd "M-q") nil)
-(define-prefix-command 'ring-map)
-(global-set-key (kbd "M-q") 'ring-map)
-(global-set-key (kbd "M-q h") 'evil-window-left)
-(global-set-key (kbd "M-q j") 'evil-window-down)
-(global-set-key (kbd "M-q k") 'evil-window-up)
-(global-set-key (kbd "M-q l") 'evil-window-right)
 
 (global-set-key (kbd "C-c h") 'evil-window-left)
 (global-set-key (kbd "C-c j") 'evil-window-down)
@@ -276,7 +269,9 @@
   (eaf-bind-key scroll_up_page "C-f" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down_page "C-b" eaf-pdf-viewer-keybinding)
   ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  (eaf-bind-key nil "M-q" eaf-browser-keybinding)
+  (eaf-bind-key nil "M-Q" eaf-browser-keybinding)
+  ;; (eaf-bind-key nil "C-M-Q" eaf-py)
+  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)
   ) ;; unbind, see more in the Wiki
 
 
@@ -300,3 +295,11 @@
 ;;   :ensure t
 ;;   ()
 ;;   )
+
+(global-set-key (kbd "M-q") nil)
+(define-prefix-command 'ring-map)
+(global-set-key (kbd "M-q") 'ring-map)
+(global-set-key (kbd "M-q h") 'evil-window-left)
+(global-set-key (kbd "M-q j") 'evil-window-down)
+(global-set-key (kbd "M-q k") 'evil-window-up)
+(global-set-key (kbd "M-q l") 'evil-window-right)

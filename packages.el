@@ -50,3 +50,14 @@
 ;(unpin! t)
 
 (package! rime)
+(package! youdao-dictionary)
+(package! counsel-etags)
+(package! ctable)
+(package! deferred)
+(package! epc)
+
+(package! counsel-gtags)
+(package! citre)
+
+(package! lsp-jedi)
+(package! native-complete)

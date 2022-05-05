@@ -80,9 +80,9 @@
 ;; global On/Off
 ;; ------------------------------------------
 (setq evil-escape-key-sequence "fd")
-(menu-bar-mode 1)
-(tool-bar-mode 1)
-(treemacs-project-follow-mode 1)
+(menu-bar-mode t)
+(tool-bar-mode t)
+(setq-hook! '(c-mode-hook c++-mode-hook) lsp-mode -1)  ; C/C++
 
 
 ;; ============================================================================================================
@@ -124,76 +124,36 @@
 (global-set-key (kbd "C-c k") 'evil-window-up)
 (global-set-key (kbd "C-c l") 'evil-window-right)
 
-(global-set-key (kbd "M-Y") 'yank)
+(global-set-key (kbd "C-M-Y") 'yank)
 
-(global-set-key (kbd "M-h") (kbd "C-@"))
+(global-set-key (kbd "M-H") nil)
+(global-set-key (kbd "M-H") 'org-metaleft)
+(global-set-key (kbd "M-l") 'org-metaright)
 
 (global-set-key (kbd "C-1") 'doom/open-scratch-buffer)
 (global-set-key (kbd "C-2") 'vsplit-scratch)
 (global-set-key (kbd "C-3") 'persp-add-buffer)
 (global-set-key (kbd "C-4") 'eaf-open-browser-with-history)
-(global-set-key (kbd "C-5") 'eaf-restart-process)
-(global-set-key (kbd "C-0") 'evil-window-delete)
-
+(global-set-key (kbd "C-5") 'eaf-open-browser)
 (global-set-key (kbd "C-9") 'persp-switch-to-buffer)
-
-
 ;;------------------------------------------------------------
 ;; evil keymap
 ;;------------------------------------------------------------
 (map! :leader
       "hy" #'set-frame-font
-
+      "o1" #'org-overview
+      "o2" #'org-show-children
       ;;---------------------------------------------
       ;; window operator
       ;;---------------------------------------------
       "w;" #'vsplit-scratch
       "w:" #'vsplit-project-scratch
       "w[" #'+evil/window-vsplit-and-follow
-
-
-      ;;---------------------------------------------
-      ;; other ui
-      ;;---------------------------------------------
-      "k1" #'youdao-dictionary-search-at-point+
-      "k2" #'youdao-dictionary-search-at-point
-      "k3" #'eaf-open-browser-with-history
-      "k4" #'eaf-open-office
-
-
-      ;;---------------------------------------------
-      ;; counsel gtags
-      ;;---------------------------------------------
-      "kc" #'counsel-gtags-create-tags
-      "ku" #'citre-global-update-database
-      "kd" #'counsel-gtags-find-definition
-      "kD" #'counsel-gtags-find-definition-other-window
-      "kg" #'counsel-gtags-find-reference
-      "kG" #'counsel-gtags-find-reference-other-window
-      "kf" #'counsel-gtags-find-file
-      "kF" #'counsel-gtags-find-file-other-windw
-      "k[" #'counsel-gtags-go-backward
-      "k]" #'counsel-gtags-go-forward
-
-
-      ;;---------------------------------------------
-      ;; counsel etags
-      ;;---------------------------------------------
-      "ke" #'counsel-etags-find-tag-at-point
-      "kE" #'counsel-etags-find-tag
-      "ks" #'counsel-etags-grep
-      "kS" #'counsel-etags-grep-current-directory
-      "ki" #'counsel-etags-list-tag-in-current-file
-      "kI" #'counsel-etags-list-tag
-
-
       ;;---------------------------------------------
       ;; other
       ;;---------------------------------------------
       "pI" #'projectile-ibuffer
       "hh" #'treemacs
-
-
       ;;---------------------------------------------
       ;; lsp
       ;;---------------------------------------------
@@ -204,6 +164,9 @@
 ;; ============================================================================================================
 ;; use package
 ;; ============================================================================================================
+;;------------------------------------------------------------------
+;; rime
+;;------------------------------------------------------------------
 (use-package! rime
   :custom
   (default-input-method "rime")
@@ -225,9 +188,93 @@
      ))
   )
 
-(use-package! youdao-dictionary)
-(use-package! counsel-etags)
-(use-package! counsel-gtags)
+
+;;------------------------------------------------------------------
+;; youdao
+;;------------------------------------------------------------------
+(use-package! youdao-dictionary
+  :config
+  (with-eval-after-load 'evil
+    (map! :leader
+          ;;---------------------------------------------
+          ;; other ui
+          ;;---------------------------------------------
+          "k1" #'youdao-dictionary-search-at-point+
+          "k2" #'youdao-dictionary-search-at-point
+          "k3" #'eaf-open-browser-with-history
+          "k4" #'eaf-open-office
+          )))
+
+
+;;------------------------------------------------------------------
+;; counsel-etags
+;;------------------------------------------------------------------
+(use-package! counsel-etags
+  :config
+  (with-eval-after-load 'evil
+    (map! :leader
+          ;;---------------------------------------------
+          ;; counsel etags
+          ;;---------------------------------------------
+          "ke" #'counsel-etags-find-tag-at-point
+          "kE" #'counsel-etags-find-tag
+          "ks" #'counsel-etags-grep
+          "kS" #'counsel-etags-grep-current-directory
+          "ki" #'counsel-etags-list-tag-in-current-file
+          "kI" #'counsel-etags-list-tag
+          )))
+
+
+;;------------------------------------------------------------------
+;; counsel-gtags
+;;------------------------------------------------------------------
+(defun save-and-update-gtags ()
+  (interactive)
+  (save-buffer)
+  (citre-global-update-database))
+
+(use-package! counsel-gtags
+  :config
+  (counsel-gtags-mode t)
+
+  (with-eval-after-load 'evil
+    (map! :leader
+          ;;---------------------------------------------
+          ;; counsel gtags
+          ;;---------------------------------------------
+          ;; "k8" #'counsel-gtags-find-reference-other-window
+          "fs" #'save-and-update-gtags
+          "kc" #'counsel-gtags-create-tags
+          "ku" #'citre-global-update-database
+          "kd" #'counsel-gtags-find-definition
+          "kD" #'counsel-gtags-find-definition-other-window
+          "kg" #'counsel-gtags-find-reference
+          "kG" #'counsel-gtags-find-reference-other-window
+          "kf" #'counsel-gtags-find-file
+          "kF" #'counsel-gtags-find-file-other-windw
+          "k[" #'counsel-gtags-go-backward
+          "k]" #'counsel-gtags-go-forward))
+
+  (global-set-key (kbd "M-n") 'company-gtags))
+
+
+;;------------------------------------------------------------------
+;; centaur-tabs
+;;------------------------------------------------------------------
+(use-package! centaur-tabs
+  ;; :ensure t
+  :config
+  (centaur-tabs-mode t)
+  (centaur-tabs-group-by-projectile-project)
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "M-[") 'centaur-tabs-backward-tab)
+    (define-key evil-normal-state-map (kbd "M-]") 'centaur-tabs-forward-tab)
+    (define-key evil-normal-state-map (kbd "M-{") 'centaur-tabs-move-current-tab-to-left)
+    (define-key evil-normal-state-map (kbd "M-}") 'centaur-tabs-move-current-tab-to-right))
+  (global-set-key (kbd "M-[") 'centaur-tabs-backward-tab)
+  (global-set-key (kbd "M-]") 'centaur-tabs-forward-tab)
+  (global-set-key (kbd "M-{") 'centaur-tabs-move-current-tab-to-left)
+  (global-set-key (kbd "M-}") 'centaur-tabs-move-current-tab-to-right))
 
 
 ;;------------------------------------------------------------------
@@ -243,23 +290,29 @@
 (require 'eaf-file-manager)
 (require 'eaf-file-sender)
 
-(use-package! eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+(defun eaf-goto-left-tab ()
+  (interactive)
+  (centaur-tabs-backward-tab))
+
+(defun eaf-goto-right-tab ()
+  (interactive)
+  (centaur-tabs-forward-tab))
+
+
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/"
   :custom
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ;; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
   (browse-url-browser-function 'eaf-open-browser)
   :config
-  ;; (setq eaf-enable-debug t)
-  (setq eaf-browser-enable-autofill t)
   (defalias 'browse-web #'eaf-open-browser)
   (eaf-bind-key scroll_up_page "C-f" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down_page "C-b" eaf-pdf-viewer-keybinding)
-  ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key eaf-goto-left-tab "J" eaf-browser-keybinding)
+  (eaf-bind-key eaf-goto-right-tab "K" eaf-browser-keybinding)
   (eaf-bind-key nil "M-Q" eaf-browser-keybinding)
-  ;; (eaf-bind-key nil "C-M-Q" eaf-py)
-  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)
   ) ;; unbind, see more in the Wiki
 
 (eval-after-load "evil"
